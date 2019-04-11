@@ -7,9 +7,13 @@ module.exports = async function unwrapRepo(name) {
   const workingDir = process.cwd();
   const repoDir = path.join(workingDir, ".ct/raw");
   const unfoldedDir = path.join(workingDir, ".ct/unfolded");
-  const { stdout } = await exec(
+  const { stdout, stderr } = await exec(
     `cd ${path.join(repoDir, name)}; git branch -a`
   );
+
+  if (stderr) {
+    console.log("OH NO :(", stderr);
+  }
 
   const branches = stdout
     .split("\n")
@@ -22,6 +26,8 @@ module.exports = async function unwrapRepo(name) {
     )
     .filter(Boolean)
     .filter((b, n, list) => list.slice(n + 1).indexOf(b) === -1);
+
+  console.log("branches in", name, "are", branches, "derived from", stdout);
 
   for (branch of branches) {
     await exec(`cd ${path.join(repoDir, name)}; git checkout ${branch}`);
@@ -38,6 +44,7 @@ module.exports = async function unwrapRepo(name) {
           filter: path => path.indexOf("node_modules") === -1
         }
       );
+      console.log("Unwrapped branch", branch, "for repo", name);
     } else {
       console.log(
         "Branch",
