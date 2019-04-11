@@ -8,7 +8,7 @@ const urlToName = require("./urlToName");
 (async () => {
   const config = await readConfig();
   for (url of config.repos) {
-    //await fetchRepo(url);
+    await fetchRepo(url);
     await unwrapRepo(urlToName(url));
   }
 })();
