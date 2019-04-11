@@ -1,3 +1,12 @@
 {
-  "name": "ct"
+  "name": "ct",
+  "devDependencies": {
+    "fs-extra": "^7.0.1"
+  },
+  "bin": {
+    "ct": "./bin/ct.js"
+  },
+  "scripts": {
+    "ct": "node ./src/ct.js"
+  }
 }
